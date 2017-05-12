@@ -12,9 +12,9 @@ HEAD=$(head -n 1 $SOURCE)
 [[ $HEAD =~ ^.*\ \"([^.]*) ]] && TASK_NAME=${BASH_REMATCH[1]}
 
 IFS=$'\n'
-DCJ='/Users/David/Documents/Wettbewerbe/Code Jam/dcj_mac_os/dcj.sh'
+DCJ='C:\Users\Marvin\Documents\Code-Projekte\GoogleCodeJam\Google_Distributed_Code_Jam\dcj\dcj.sh'
 INPUT_DIR='../Inputs/'
-NODES=10
+NODES=20
 
 echo \#include \"$INPUT_DIR$TASK_NAME.h\" > $TASK_NAME.h
 $DCJ test --source $SOURCE --nodes $NODES
@@ -24,8 +24,8 @@ then
     exit
 fi
 
-echo \#include \"$INPUT_DIR$TASK_NAME-2.h\" > $TASK_NAME.h
+echo \#include \"$INPUT_DIR$TASK_NAME/ (2).h\" > $TASK_NAME.h
 $DCJ test --source $SOURCE --nodes $NODES
 
-echo \#include \"$INPUT_DIR$TASK_NAME-3.h\" > $TASK_NAME.h
+echo \#include \"$INPUT_DIR$TASK_NAME/ (3).h\" > $TASK_NAME.h
 $DCJ test --source $SOURCE --nodes $NODES

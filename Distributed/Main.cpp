@@ -1,4 +1,4 @@
-#include "encoded_sum.h"
+#include "again.h"
 
 /*** START OF TEMPLATE CODE ***/
 
@@ -681,35 +681,6 @@ using namespace mathTools;
 using namespace parallelTools;
 using namespace std;
 
-//#region redirecting main to task::main
-namespace task{
-void init();
-void run_node();
-
-msg::range_comm world(NumberOfNodes());
-int rank, nodes;
-ll result;
-
-int main()
-{
-    rank = MyNodeId();
-    nodes = NumberOfNodes();
-    init();
-
-    run_node();
-
-    if (rank == M){
-        cout << result << endl;
-    }
-    return 0;
-}
-}
-
-int main(){
-    return task::main();
-}
-//#endregion
-
 typedef long long ll;
 typedef long double ld;
 typedef complex<ld> pnt;
@@ -739,19 +710,50 @@ typedef string str;
 #define fore(i, a, b) for (ll i = (ll)(a); i <= (ll)(b); ++i)
 
 /*** END OF TEMPLATE CODE ***/
+namespace task{
+ll result; }
+//#region redirecting main to task::main
+namespace task{
+bool init();
+void run_node();
+
+msg::range_comm world(NumberOfNodes());
+int rank, nodes;
+
+int main()
+{
+    rank = MyNodeId();
+    nodes = NumberOfNodes();
+    if(!init())
+		return 0;
+
+    run_node();
+
+    if (rank == M){
+        cout << result << endl;
+    }
+    return 0;
+}
+}
+
+int main(){
+    return task::main();
+}
+//#endregion
 
 namespace task{
 
 ll N, start, end;
-void init(){
-    N = GetLength();
+bool init(){
+	world.setRange(0, nodes);
+	N = GetLength();
     if (!partition_work(N, rank, nodes, start, end))
-        return 0;
-    world.setRange(0, nodes);
+        return false;
+	return true;
 }
 
 void run_node(){
-    result;
+	result;
 }
 
 } // namespace task
