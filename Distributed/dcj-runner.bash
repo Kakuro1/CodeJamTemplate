@@ -24,8 +24,8 @@ then
     exit
 fi
 
-echo \#include \"$INPUT_DIR$TASK_NAME/ (2).h\" > $TASK_NAME.h
+echo \#include \"$INPUT_DIR$TASK_NAME \(1\).h\" > $TASK_NAME.h
 $DCJ test --source $SOURCE --nodes $NODES
 
-echo \#include \"$INPUT_DIR$TASK_NAME/ (3).h\" > $TASK_NAME.h
+echo \#include \"$INPUT_DIR$TASK_NAME \(2\).h\" > $TASK_NAME.h
 $DCJ test --source $SOURCE --nodes $NODES

@@ -746,7 +746,7 @@ namespace task{
 ll N, start, end;
 bool init(){
 	world.setRange(0, nodes);
-	N = GetLength();
+	N = GetN();
     if (!partition_work(N, rank, nodes, start, end))
         return false;
 	return true;
