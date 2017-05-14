@@ -15,11 +15,14 @@ typedef std::string str;
 #define hash unordered_map
 #define v(type) std::deque<type >
 #define p(type1,type2) std::pair<type1, type2 >
+#define c(type) std::complex<type >
 //#endregion types
 //#region members and functions
 #define mp make_pair
-#define x first
-#define y second
+#define st first
+#define nd second
+#define x real()
+#define y imag()
 #define bk back()
 #define ft front()
 #define pb push_back
@@ -172,10 +175,13 @@ using namespace selectionTools;
 
 /* mathTools
  *
- *  declares faculty (facll and facld)  IMPORTANT: facll works only for n<=20
+ *  declares faculty (facll, facmod and facld)  IMPORTANT: facll works only for n<=20
+ *  declares choose (choosell, choosemod and chooseld)  IMPORTANT: choosell works only for n<=62
  *  declares power on integers (powll and powmod)
  *  declares log2 on integers (log2ll)
  *  declares vmin (returns v[i]=min(a[i] , b[i]) )
+ *  declares ceill(p,q)/floorll (returns ceil(p/q)/floorll(p/q) for integers)
+ *  declares an <-operator for std::complex
  */
 //#region mathTools
 namespace mathTools{
@@ -185,10 +191,63 @@ unsigned long long facll(unsigned long long n){
     return 1;
 }
 
+unsigned long long facmod(unsigned long long n){
+    if (n)
+        return (n * facmod(n - 1)) % MOD;
+    return 1;
+}
+
 long double facld(unsigned long long n){
     if(n)
         return (long double)n * facld(n-1);
     return 1.;
+}
+
+unsigned long long choosell(unsigned long long n, unsigned long long k){
+    if (k > n)
+        return 0;
+    if ( n-k < k)
+        return choosell(n, n-k);
+    unsigned long long result = 1;
+    for(unsigned long long i = 0; i < k; ++i){
+        result *= n - i;
+        result /= i + 1;
+    }
+    return result;
+}
+
+unsigned long long choosemod(unsigned long long n, unsigned long long k){
+    static std::vector<std::vector<unsigned long long> > memorize;
+    if (k > n)
+        return 0;
+    if (memorize.size() > n){
+        if (memorize[n].size() > k){
+            return memorize[n][k];
+        } else{
+            choosemod(n, k-1);
+            memorize[n].push_back((choosemod(n-1,k-1) + choosemod(n-1,k)) % MOD);
+            return memorize[n][k];
+        }
+    } else{
+        while (memorize.size() <= n){
+            memorize.push_back(std::vector<unsigned long long>());
+            memorize.back().push_back(1LL);
+        }
+        return choosemod(n,k);
+    }
+}
+
+long double chooseld(unsigned long long n, unsigned long long k){
+    if (k > n)
+        return 0;
+    if ( n-k < k)
+        return chooseld(n, n-k);
+    long double result = 1;
+    for(unsigned long long i = 0; i < k; ++i){
+        result *= n - i;
+        result /= i + 1;
+    }
+    return result;
 }
 
 long long powll(long long base, unsigned long long exp){
@@ -200,13 +259,6 @@ long long powll(long long base, unsigned long long exp){
         long long t = powll(base, exp / 2);
         return t * t;
     }
-}
-
-unsigned long long log2ll(unsigned long long n){
-    assert(n > 0);
-    if (n == 1)
-        return 0;
-    return 1 + log2ll(n >> 1);
 }
 
 long long powmod(long long base, long long exp)
@@ -221,12 +273,48 @@ long long powmod(long long base, long long exp)
     }
 }
 
+unsigned long long log2ll(unsigned long long n){
+    assert(n > 0);
+    if (n == 1)
+        return 0;
+    return 1 + log2ll(n >> 1);
+}
+
 std::deque<long long> vmin(std::deque<long long> a, std::deque<long long> b)
 {
     std::deque<long long> out;
     for (unsigned i = 0; i < a.size(); ++i)
         out.push_back(std::min(a[i], b[i]));
     return out;
+}
+
+long long ceill(long long p, long long q){
+    if (q<0)
+        return ceill(-p,-q);
+    if (p<0)
+        return p/q;
+    return (p+q-1)/q;
+}
+
+long long floorll(long long p, long long q){
+    if (q<0)
+        return floorll(-p,-q);
+    if (p<0)
+        return (p-q+1)/q;
+    return p/q;
+}
+
+template <typename T>
+bool operator<(const std::complex<T> &lhs, const std::complex<T> &rhs){
+    if(lhs.real() < rhs.real())
+        return true;
+    if(rhs.real() < lhs.real())
+        return false;
+    if(lhs.imag() < rhs.imag())
+        return true;
+    if(rhs.imag() < lhs.imag())
+        return false;
+    return false;
 }
 } // namespace mathTools
 using namespace mathTools;
